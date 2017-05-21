@@ -1,6 +1,7 @@
-import React, { ReactComponent } from 'react';
+import React, { Component } from 'react';
+import '../assets/mainpage.less';
 
-class Main extends ReactComponent {
+class Main extends Component {
   render() {
     return (
       <div>
