@@ -5,7 +5,13 @@ class Main extends Component {
   render() {
     return (
       <div>
-        main-page
+        <span>
+           main-page
+        </span>
+        <span>
+           main-page
+        </span>
+
       </div>
     )
   }

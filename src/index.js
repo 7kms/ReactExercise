@@ -2,16 +2,18 @@ import './assets/base.less';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import { MainPageContainer } from 'react-hot-loader';
+import { AppContainer } from 'react-hot-loader';
 // MainPageContainer 是一个 HMR 必须的包裹(wrapper)组件
 
 import MainPage from './pages/MainPage';
 
 const render = (Component) => {
+    console.log(Component);
+    console.log(AppContainer);
     ReactDOM.render(
-        <MainPageContainer>
+        <AppContainer>
             <Component />
-        </MainPageContainer>,
+        </AppContainer>,
         document.getElementById('root')
     );
 };

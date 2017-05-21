@@ -3,7 +3,7 @@ const webpack = require('webpack');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 module.exports = {
-    // context: resolve(__dirname, '../src'),
+    context: resolve(__dirname),
     entry: {
       hmr: [
         'react-hot-loader/patch',
@@ -17,23 +17,23 @@ module.exports = {
         // 为热替换(HMR)打包好代码
         // only- 意味着只有成功更新运行代码才会执行热替换(HMR)
       ],
-      app: [
-        '../src/index.js'
-        // 我们 app 的入口文件
-      ],
       vendor: [
         'babel-polyfill',
         'react',
         'react-dom'
+      ],
+      app: [
+        '../src/index.js'
+        // 我们 app 的入口文件
       ]
     },
     output: {
-      path: resolve(__dirname, '../dist'),
+      path: resolve(__dirname, '../dist/'),
 
       publicPath: '/dist/',
       // 对于热替换(HMR)是必须的，让 webpack 知道在哪里载入热更新的模块(chunk)
 
-      filename: '[name].[chunkhash:6].js'
+      filename: '[name].js'
       // 输出的打包文件
     },
     resolve: {
@@ -48,21 +48,25 @@ module.exports = {
         hot: true,
         // 开启服务器的模块热替换(HMR)
 
-        contentBase: resolve(__dirname, 'dist'),
+        // contentBase: resolve(__dirname, '../dist/'),
         // 输出文件的路径
 
         publicPath: '/dist/',
-            // 和上文 output 的“publicPath”值保持一致
+        // 和上文 output 的“publicPath”值保持一致
+
+        noInfo: true,
+
+        historyApiFallback: true
     },
 
     module: {
         rules: [
-          {
-            enforce: 'pre',
-            test:  /\.jsx?$/,
-            use: 'eslint-loader',
-            exclude: /node_modules/
-          },
+          // {
+          //   enforce: 'pre',
+          //   test:  /\.jsx?$/,
+          //   use: 'eslint-loader',
+          //   exclude: /node_modules/
+          // },
             {
                 test: /\.jsx?$/,
                 use: ['babel-loader'],
@@ -70,6 +74,7 @@ module.exports = {
             },
             {
               test: /\.css$/,
+              exclude: /node_modules/,
               use: ExtractTextPlugin.extract({
                     use: 'css-loader'
                 })
@@ -98,7 +103,7 @@ module.exports = {
         new webpack.HotModuleReplacementPlugin(),
         // 开启全局的模块热替换(HMR)
 
-        new webpack.NamedModulesPlugin(),
+        // new webpack.NamedModulesPlugin(),
         // 当模块热替换(HMR)时在浏览器控制台输出对用户更友好的模块名字信息
 
         new ExtractTextPlugin('[name].[contenthash:6].css'),
@@ -107,31 +112,12 @@ module.exports = {
 
         new HtmlWebpackPlugin({
           title: 'react-exercise',
+          template: '../src/template/index.html',
           filename: 'index.html'
         }),
 
-        // extract dev runtime to a special file
         new webpack.optimize.CommonsChunkPlugin({
-          name: 'hmr'
-        }),
-        // extract vendor chunks for better caching
-        new webpack.optimize.CommonsChunkPlugin({
-          name: 'vendor',
-          minChunks: function (module) {
-            // a module is extracted into the vendor chunk if...
-            return (
-              // it's inside node_modules
-              /node_modules/.test(module.context) &&
-              // and not a CSS file (due to extract-text-webpack-plugin limitation)
-              !/\.css$/.test(module.request)
-            )
-          }
-        }),
-
-        // extract webpack runtime & manifest to avoid vendor chunk hash changing
-        // on every build.
-        new webpack.optimize.CommonsChunkPlugin({
-          name: 'manifest'
+          names: ['hmr','vendor','manifest']
         })
     ]
 };
