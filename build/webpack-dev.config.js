@@ -40,6 +40,7 @@ module.exports = {
       alias: {
         'react': resolve(__dirname, '../node_modules/react'),
         'react-dom': resolve(__dirname, '../node_modules/react-dom'),
+        '~less': resolve(__dirname, '../src/assets'),
       }
     },
     devtool: '#cheap-module-source-map',
@@ -48,7 +49,7 @@ module.exports = {
         hot: true,
         // 开启服务器的模块热替换(HMR)
 
-        // contentBase: resolve(__dirname, '../dist/'),
+        contentBase: resolve(__dirname, '../dist/'),
         // 输出文件的路径
 
         publicPath: '/dist/',
@@ -82,7 +83,14 @@ module.exports = {
             {
               test: /\.less$/,
               use: ExtractTextPlugin.extract({
-                use: ['css-loader',{
+                use: [{
+                  loader: 'css-loader',
+                  options:{
+                    modules: true,
+                    importLoader: true,
+                    localIdentName: '[name]-[local]-[hash:base64:6]'
+                  }
+                },{
                   loader: 'postcss-loader',
                   options: {
                     plugins: [require('autoprefixer')({
@@ -103,7 +111,7 @@ module.exports = {
         new webpack.HotModuleReplacementPlugin(),
         // 开启全局的模块热替换(HMR)
 
-        // new webpack.NamedModulesPlugin(),
+        new webpack.NamedModulesPlugin(),
         // 当模块热替换(HMR)时在浏览器控制台输出对用户更友好的模块名字信息
 
         new ExtractTextPlugin('[name].[contenthash:6].css'),
