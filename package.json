@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "rimraf dist && webpack-dev-server --config build/webpack-dev.config.js",
     "product": "rimraf dist && npm run build:product",
-    "build:product": "cross-env NODE_ENV=production webpack --config build/webpack-dev.config.js --progress --color --colors --hide-modules"
+    "build:product": "cross-env NODE_ENV=production webpack --config build/webpack-product.config.js --progress --color --colors --hide-modules"
   },
   "author": "",
   "license": "ISC",
