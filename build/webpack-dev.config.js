@@ -2,6 +2,7 @@ const { resolve } = require('path');
 const webpack = require('webpack');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
+let isProduct = process.env.NODE_ENV === 'production';
 module.exports = {
     context: resolve(__dirname),
     entry: {
@@ -41,6 +42,7 @@ module.exports = {
         'react': resolve(__dirname, '../node_modules/react'),
         'react-dom': resolve(__dirname, '../node_modules/react-dom'),
         '~less': resolve(__dirname, '../src/assets'),
+        '~util': resolve(__dirname, '../src/util')
       }
     },
     devtool: '#cheap-module-source-map',
@@ -82,7 +84,7 @@ module.exports = {
             },
             {
               test: /\.less$/,
-              use: ExtractTextPlugin.extract({
+              use: isProduct ? ExtractTextPlugin.extract({
                 use: [{
                   loader: 'css-loader',
                   options:{
@@ -98,7 +100,21 @@ module.exports = {
                     })]
                   }
                 },'less-loader']
-              })
+              }) : ['style-loader',{
+                  loader: 'css-loader',
+                  options:{
+                    modules: true,
+                    importLoader: true,
+                    localIdentName: '[name]-[local]-[hash:base64:6]'
+                  }
+                },{
+                  loader: 'postcss-loader',
+                  options: {
+                    plugins: [require('autoprefixer')({
+                      browsers: ['last 10 versions']
+                    })]
+                  }
+                },'less-loader']
             },
           {
             test: /\.(jpg|png|gif)$/,
